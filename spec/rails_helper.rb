@@ -6,8 +6,10 @@ require File.expand_path('../config/environment', __dir__)
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
-require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'rspec/rails'
+require 'devise'
+require_relative 'support/controller_macros'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -40,12 +42,21 @@ SimpleCov.start 'rails' do
   add_filter '/db/'
   add_filter '/spec/' # for rspec
   add_filter 'app/channels/application_cable/'
+  add_filter 'app/mailers/application_mailer.rb'
+  add_filter 'app/models/application_record.rb'
 end
 
 
 RSpec.configure do |config|
+
+  
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
+
+  config.include Devise::Test::ControllerHelpers, :type => :controller
+  config.include Devise::Test::IntegrationHelpers, :type => :feature
+  config.include FactoryBot::Syntax::Methods
+  config.extend ControllerMacros, :type => :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -71,5 +82,5 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-
+  
 end

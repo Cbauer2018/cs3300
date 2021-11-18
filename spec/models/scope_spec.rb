@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Project, type: :model do
-  # ...
+
 
   context "scopes tests" do
     let(:params) { { title: "Title", description: "some description" } }
